@@ -25,10 +25,9 @@
     "typescript": "^5.3.3",
     "vite": "^5.1.4"
   },
-    "scripts": {
-+   "predeploy": "npm run build",
-+   "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build"
+      "scripts": {
+    "predeploy": "npm run build",
+-   "deploy": "gh-pages -d build",
++   "deploy": "gh-pages -b main -d build",
 }
 }
