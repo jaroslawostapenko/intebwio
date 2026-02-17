@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /private/
+
+# Sitemap location
+Sitemap: https://intebwio.com/sitemap.xml
