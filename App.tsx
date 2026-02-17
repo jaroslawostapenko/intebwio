@@ -4,7 +4,10 @@ import { AddressBar } from './components/Browser/AddressBar';
 import { BookmarksBar } from './components/Browser/BookmarksBar';
 import { HomePage } from './components/Pages/HomePage';
 import { GeneratedPageView } from './components/Pages/GeneratedPage';
+import { AboutPage } from './components/About/AboutPage';
 import { Loader } from './components/UI/Loader';
+import { SEOHead } from './components/SEO/SEOHead';
+import { StructuredData } from './components/SEO/StructuredData';
 import { GeneratedPage, HistoryItem, Tab, Bookmark } from './types';
 import { storageService } from './services/storageService';
 import { generatePageContent } from './services/geminiService';
@@ -41,6 +44,48 @@ const App: React.FC = () => {
   const activeTab = tabs.find(t => t.id === activeTabId) || tabs[0];
   const activePage = activeTab.query ? (pageCache[normalizeQuery(activeTab.query)] || storageService.getPage(activeTab.query)) : null;
   const isCurrentBookmarked = activeTab.query ? storageService.isBookmarked(activeTab.query) : false;
+  
+  const isAboutPage = activeTab.query.toLowerCase() === 'about' || activeTab.query.toLowerCase() === 'intebwio://about';
+
+  // --- SEO Logic ---
+  const renderSEO = () => {
+    if (isAboutPage) {
+      return (
+        <>
+          <SEOHead 
+            title="About Intebwio - The AI Browser" 
+            description="Learn about the Intebwio manifesto, the technical architecture powered by Gemini, and the creator Yaroslav Ostapenko."
+            keywords={['about', 'manifesto', 'architecture', 'Yaroslav Ostapenko']}
+          />
+          <StructuredData type="AboutPage" data={{}} />
+        </>
+      );
+    }
+    
+    if (activePage) {
+      return (
+        <>
+          <SEOHead 
+            title={`${activePage.title} - Intebwio`} 
+            description={activePage.description.substring(0, 160)}
+            keywords={activePage.relatedTopics}
+          />
+          <StructuredData type="Article" data={activePage} />
+        </>
+      );
+    }
+
+    // Default / Home
+    return (
+      <>
+        <SEOHead 
+          title="Intebwio - The AI Browser" 
+          description="Intebwio is an intelligent web browser that builds the web for you using Gemini AI. Experience the generative web."
+        />
+        <StructuredData type="WebApplication" data={{}} />
+      </>
+    );
+  };
 
   // --- Actions ---
 
@@ -80,6 +125,13 @@ const App: React.FC = () => {
   // 2. Navigation & Generation
   const handleNavigate = useCallback(async (query: string, forceRefresh = false, useFlash = false) => {
     if (!query) return;
+
+    // Special handling for About page
+    if (query.toLowerCase() === 'about' || query.toLowerCase() === 'intebwio://about') {
+      updateActiveTab({ query: 'about', title: 'About Intebwio', isLoading: false, error: undefined });
+      setIsQuotaExceeded(false);
+      return;
+    }
 
     setIsQuotaExceeded(false);
     updateActiveTab({ query: query, title: query, error: undefined });
@@ -241,10 +293,17 @@ const App: React.FC = () => {
       );
     }
 
+    // Route: Home
     if (!activeTab.query) {
       return <HomePage onSearch={handleNavigate} history={history} />;
     }
 
+    // Route: About Page
+    if (isAboutPage) {
+      return <AboutPage onNavigate={handleNavigate} />;
+    }
+
+    // Route: Generated Page
     if (activePage) {
       return (
         <GeneratedPageView 
@@ -262,7 +321,9 @@ const App: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen bg-browser-bg font-sans text-gray-900 overflow-hidden">
-      
+      {/* Inject Dynamic SEO Tags */}
+      {renderSEO()}
+
       {/* Chrome */}
       <div className="flex flex-col bg-gray-200 border-b border-gray-300 shadow-sm">
         <Tabs 
