@@ -17,7 +17,7 @@ export const HomePage: React.FC<Props> = ({ onSearch, history }) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[85vh] px-4 animate-in fade-in duration-700 bg-gradient-to-b from-transparent to-white/50">
+    <div className="flex flex-col items-center justify-center min-h-[85vh] px-4 animate-in fade-in duration-700 bg-gradient-to-b from-transparent to-white/50 relative">
       
       {/* Brand Hero */}
       <div className="mb-10 text-center relative">
@@ -53,7 +53,7 @@ export const HomePage: React.FC<Props> = ({ onSearch, history }) => {
       </form>
 
       {/* Grid Content */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl mb-12">
         
         {/* Discover */}
         <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-gray-100 shadow-sm">
@@ -100,6 +100,12 @@ export const HomePage: React.FC<Props> = ({ onSearch, history }) => {
         </div>
 
       </div>
+
+      <footer className="w-full text-center pb-6">
+        <p className="text-sm text-gray-400 font-medium">
+          Created by <button onClick={() => onSearch('about')} className="text-gray-600 hover:text-blue-600 hover:underline">Yaroslav Ostapenko</button>
+        </p>
+      </footer>
     </div>
   );
 };

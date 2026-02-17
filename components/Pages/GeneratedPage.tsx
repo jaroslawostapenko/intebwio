@@ -11,7 +11,6 @@ import { TimelineSection } from '../Renderers/TimelineSection';
 import { FAQSection } from '../Renderers/FAQSection';
 import { formatDate } from '../../lib/utils';
 import { Clock, RefreshCw, Bookmark, BookmarkCheck } from 'lucide-react';
-import { storageService } from '../../services/storageService';
 
 interface Props {
   page: GeneratedPage;
@@ -95,6 +94,11 @@ export const GeneratedPageView: React.FC<Props> = ({ page, onNavigate, onRefresh
           </div>
         </div>
       )}
+
+      {/* Credits */}
+      <div className="mt-12 pt-6 border-t border-gray-100 text-center">
+         <p className="text-xs text-gray-400">Intebwio • Created by Yaroslav Ostapenko</p>
+      </div>
     </div>
   );
 };
