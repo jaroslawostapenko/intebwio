@@ -61,8 +61,6 @@ export const generatePageContent = async (query: string, useFlash: boolean = fal
         systemInstruction: SYSTEM_INSTRUCTION,
         tools: [{ googleSearch: {} }],
         temperature: 0.5,
-        // Optional: Disable or limit thinking to save tokens/quota if needed
-        thinkingConfig: { thinkingBudget: 0 }
       },
     });
 
